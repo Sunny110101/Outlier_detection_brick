@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  outlier_detection:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: outlier-detection:latest
+    volumes:
+      - .:/app
+      - ./data:/app/data
+    environment:
+      - PYTHONPATH=/app
+      - LOG_LEVEL=INFO
+    command: >
+      --input-csv /app/data/input/axle_clean_data.csv
+      --output-csv /app/data/output/axle_clean_data_processed.csv
+      --numeric-columns humidity temperature vpr_current_val vpr_voltage_val unit1_current_val unit1_voltage_val
+      --limits 0.05 0.05

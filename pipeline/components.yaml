@@ -1,0 +1,115 @@
+name: Axle Data Outlier Detection
+description: |
+  Detects and handles outliers in axle sensor data including humidity, temperature, 
+  VPR measurements, and unit1 measurements using winsorization method.
+
+metadata:
+  annotations:
+    author: 'Your Name'
+    version: '1.0.0'
+    dataset: 'axle_clean_data.csv'
+
+inputs:
+  - {name: input_csv, type: String, default: '/app/data/input/axle_clean_data.csv', description: 'Path to axle sensor data CSV file'}
+  - {name: numeric_columns, type: JsonArray, default: '["humidity", "temperature", "vpr_current_val", "vpr_voltage_val", "unit1_current_val", "unit1_voltage_val"]', description: 'Sensor measurement columns to process'}
+  - {name: limits, type: JsonArray, default: '[0.05, 0.05]', description: 'Tuple of (lower, upper) percentile limits for winsorization'}
+  - {name: method, type: String, default: 'winsorize', description: 'Method to handle outliers'}
+
+outputs:
+  - {name: output_csv, type: String, description: 'Processed axle data with handled outliers'}
+  - {name: outlier_report, type: String, description: 'Statistical report of outliers in each sensor measurement'}
+
+implementation:
+  container:
+    image: outlier-detection:latest
+    command: [
+      "python", "-m", "src.outlier_detection.outlier_detection",
+      "--input-csv", {inputPath: input_csv},
+      "--output-csv", {outputPath: output_csv},
+      "--numeric-columns", "humidity", "temperature", "vpr_current_val", "vpr_voltage_val", "unit1_current_val", "unit1_voltage_val",
+      "--limits", {inputValue: limits},
+      "--method", {inputValue: method}
+    ]
+    fileOutputs:
+      output_csv: /app/data/output/axle_clean_data_processed.csv
+      outlier_report: /app/data/output/axle_clean_data_report.csv
+    
+    resources:
+      requests:
+        memory: 1Gi
+        cpu: 500m
+      limits:
+        memory: 2Gi
+        cpu: 1000m
+        
+    env:
+      - name: PYTHONPATH
+        value: /app
+      - name: LOG_LEVEL
+        value: INFO
+
+    volumeMounts:
+      - name: data
+        mountPath: /app/data
+        
+    volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: axle-data-storagename: Axle Data Outlier Detection
+description: |
+  Detects and handles outliers in axle sensor data including humidity, temperature, 
+  VPR measurements, and unit1 measurements using winsorization method.
+
+metadata:
+  annotations:
+    author: 'Your Name'
+    version: '1.0.0'
+    dataset: 'axle_clean_data.csv'
+
+inputs:
+  - {name: input_csv, type: String, default: '/app/data/input/axle_clean_data.csv', description: 'Path to axle sensor data CSV file'}
+  - {name: numeric_columns, type: JsonArray, default: '["humidity", "temperature", "vpr_current_val", "vpr_voltage_val", "unit1_current_val", "unit1_voltage_val"]', description: 'Sensor measurement columns to process'}
+  - {name: limits, type: JsonArray, default: '[0.05, 0.05]', description: 'Tuple of (lower, upper) percentile limits for winsorization'}
+  - {name: method, type: String, default: 'winsorize', description: 'Method to handle outliers'}
+
+outputs:
+  - {name: output_csv, type: String, description: 'Processed axle data with handled outliers'}
+  - {name: outlier_report, type: String, description: 'Statistical report of outliers in each sensor measurement'}
+
+implementation:
+  container:
+    image: outlier-detection:latest
+    command: [
+      "python", "-m", "src.outlier_detection.outlier_detection",
+      "--input-csv", {inputPath: input_csv},
+      "--output-csv", {outputPath: output_csv},
+      "--numeric-columns", "humidity", "temperature", "vpr_current_val", "vpr_voltage_val", "unit1_current_val", "unit1_voltage_val",
+      "--limits", {inputValue: limits},
+      "--method", {inputValue: method}
+    ]
+    fileOutputs:
+      output_csv: /app/data/output/axle_clean_data_processed.csv
+      outlier_report: /app/data/output/axle_clean_data_report.csv
+    
+    resources:
+      requests:
+        memory: 1Gi
+        cpu: 500m
+      limits:
+        memory: 2Gi
+        cpu: 1000m
+        
+    env:
+      - name: PYTHONPATH
+        value: /app
+      - name: LOG_LEVEL
+        value: INFO
+
+    volumeMounts:
+      - name: data
+        mountPath: /app/data
+        
+    volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: axle-data-storage

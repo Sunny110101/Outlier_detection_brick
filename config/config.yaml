@@ -1,0 +1,16 @@
+outlier_detection:
+  input_path: "data/input/axle_clean_data.csv"
+  output_path: "data/output/axle_clean_data_processed.csv"
+  report_path: "data/output/axle_clean_data_report.csv"
+  columns:
+    - humidity
+    - temperature
+    - vpr_current_val
+    - vpr_voltage_val
+    - unit1_current_val
+    - unit1_voltage_val
+  limits: [0.05, 0.05]
+  method: "winsorize"
+  logging:
+    level: INFO
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
