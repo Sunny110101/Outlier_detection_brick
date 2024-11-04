@@ -24,6 +24,7 @@ python -m src.outlier_detection.outlier_detection \
     --numeric-columns column1 column2 \
     --limits 0.05 0.05
 ```
+### Kubeflow Pipeline Usage
 
 ### As Pipeline Component
 ```python
