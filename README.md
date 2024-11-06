@@ -34,5 +34,14 @@ pipeline.create_run_from_pipeline_func(create_outlier_detection_pipeline, argume
 
 ## Testing
 ```bash
+
+## Docker Run
+docker run -v .:/app `
+    4d24fe9b2efa `
+    --input-csv /app/data/input/axle_clean_data.csv `
+    --output-csv /app/data/output/processed_data.csv `
+    --numeric-columns humidity temperature vpr_current_val vpr_voltage_val unit1_current_val unit1_voltage_val `
+    --limits 0.05 0.95 `
+    --method detect
 python -m pytest tests/
 ```
